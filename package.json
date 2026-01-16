@@ -1,0 +1,46 @@
+{
+  "name": "waifu2x-api",
+  "author": {
+    "name": "UCPr",
+    "url": "https://github.com/UCPr251"
+  },
+  "repository": {
+    "url": "https://github.com/UCPr251/waifu2x-api"
+  },
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "pm2 start pm2.json",
+    "logs": "pm2 logs waifu2x-api --raw",
+    "stop": "pm2 stop waifu2x-api",
+    "restart": "pm2 restart waifu2x-api",
+    "build": "tsc",
+    "build:css": "npx @tailwindcss/cli -i input.css -o style.css --minify --cwd",
+    "re": "git pull --rebase && pnpm run build && pm2 restart waifu2x-api",
+    "run": "node .",
+    "dev": "nodemon -w src -e \"js,ts\" --exec \"tsc && node .\""
+  },
+  "dependencies": {
+    "chalk": "^5.6.2",
+    "chokidar": "^5.0.0",
+    "compression": "^1.8.1",
+    "cors": "^2.8.5",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
+    "log4js": "^6.9.1",
+    "p-queue": "^9.1.0",
+    "pg": "^8.17.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.18",
+    "@types/compression": "^1.8.1",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/pg": "^8.16.0",
+    "nodemon": "^3.1.11",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3"
+  }
+}

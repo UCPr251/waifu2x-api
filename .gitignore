@@ -1,0 +1,14 @@
+.vscode/
+.VSCodeCounter/
+config.json
+node_modules/
+/waifu2x-ncnn-vulkan
+/data
+/logs
+/dist
+/uploads
+/test/images/*
+/test/images_*
+!/test/images/input.jpg
+/cache
+test/processImage copy.js

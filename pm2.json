@@ -1,0 +1,12 @@
+{
+  "apps": [
+    {
+      "name": "waifu2x-api",
+      "script": "index.js",
+      "max_memory_restart": "8G",
+      "node_args": "--max_old_space_size=8192",
+      "autorestart": true,
+      "restart_delay": 3000
+    }
+  ]
+}

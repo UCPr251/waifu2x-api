@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --log-bg: #000000;
+    --log-header: #2d2d2d;
+    --log-text: #e0e0e0;
+    --log-accent: #4a90e2;
+  }
+}
+
+@layer utilities {
+  .bg-log-bg {
+    background-color: var(--log-bg);
+  }
+
+  .bg-log-header {
+    background-color: var(--log-header);
+  }
+
+  .text-log-text {
+    color: var(--log-text);
+  }
+
+  .text-log-accent {
+    color: var(--log-accent);
+  }
+
+  .font-mono {
+    font-family: Consolas, Monaco, "Courier New", monospace;
+  }
+
+  .content-auto {
+    content-visibility: auto;
+  }
+
+  .log-line {
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  .log-container {
+    line-height: 1.4;
+    font-size: 16px;
+    scrollbar-width: thin;
+    scrollbar-color: #4a4a4a #2d2d2d;
+  }
+
+  .log-container::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .log-container::-webkit-scrollbar-track {
+    background: #2d2d2d;
+  }
+
+  .log-container::-webkit-scrollbar-thumb {
+    background-color: #4a4a4a;
+    border-radius: 3px;
+  }
+
+  .scroll-indicator {
+    background-color: rgba(61, 61, 61, 0.8);
+    border: 1px solid #555;
+    cursor: pointer;
+    z-index: 300;
+  }
+
+  .mobile-menu {
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .mobile-menu.show {
+    transform: translateX(0);
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "api": {
+    "host": "127.0.0.1",
+    "port": 6251,
+    "helmet": false,
+    "enableCors": true,
+    "logToken": "",
+    "rateLimitPerMinute": 120,
+    "maxInputSizeMB": 3,
+    "saveUploads": false,
+    "blackIPs": []
+  },
+  "logging": {
+    "level": "info",
+    "numBackups": 30,
+    "ignoreDownloadLogs": false,
+    "ignoreDownloadDebugLogs": true
+  },
+  "waifu2x": {
+    "path": "./waifu2x-ncnn-vulkan/waifu2x-ncnn-vulkan.exe",
+    "scale": 2,
+    "noise": 1,
+    "tile": 256,
+    "model": "models-cunet",
+    "gpu": 0,
+    "threads": "2:2:2",
+    "format": "png",
+    "tta": false
+  },
+  "paths": {
+    "cacheDir": "cache",
+    "tempDir": "uploads/runtime"
+  },
+  "scheduler": {
+    "concurrency": 3,
+    "maxQueueSize": 200,
+    "taskTimeoutMs": 600000,
+    "lifo": false
+  },
+  "postgres": {
+    "connectionString": "postgres://postgres:waifu2x@localhost:5432/waifu2x",
+    "ssl": false
+  },
+  "cache": {
+    "ttlSeconds": 0,
+    "directDownloadOnHit": false
+  }
+}

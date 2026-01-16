@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="overflow-x-hidden theme-transition">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Waifu2x 超分工作台</title>
+  <script>
+    (function initTheme() {
+      const hour = new Date().getHours()
+      const defaultMode = (hour >= 20 || hour < 8) ? 'dark' : 'light'
+      let mode = defaultMode
+      try {
+        const stored = localStorage.getItem('theme')
+        if (stored === 'dark' || stored === 'light') {
+          mode = stored
+        }
+      } catch (error) {
+        console.warn('主题读取失败', error)
+      }
+      document.documentElement.dataset.theme = mode
+    })()
+  </script>
+
+  <link rel="stylesheet" href="/public/fontawesome-free@7.1.0/css/all.min.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body class="min-h-screen bg-surface text-foreground font-body antialiased relative overflow-x-hidden">
+  <div class="absolute inset-0 pointer-events-none select-none opacity-70 overflow-hidden">
+    <div
+      class="absolute -top-32 -right-32 w-[32rem] h-[32rem] rounded-full blur-[150px] bg-gradient-to-b from-[#7b6ef6] via-[#4bd1c9] to-transparent animate-[pulse_18s_ease-in-out_infinite]">
+    </div>
+    <div
+      class="absolute top-1/3 -left-16 w-[28rem] h-[28rem] rounded-full blur-[140px] bg-gradient-to-b from-[#ffb347] via-[#ff5f6d] to-transparent opacity-70">
+    </div>
+    <div class="absolute inset-0 bg-grid"></div>
+  </div>
+
+  <div class="relative z-10 flex flex-col min-h-screen">
+    <header class="w-full">
+      <div
+        class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div class="space-y-2">
+          <div
+            class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border/60 bg-card/70 text-xs font-semibold uppercase tracking-widest text-muted">
+            <i class="fa-solid fa-wand-magic-sparkles text-accent"></i>
+            图片超分服务
+          </div>
+          <div>
+            <h1 class="text-3xl sm:text-4xl font-display font-semibold">Waifu2x 超分工作台</h1>
+            <p class="text-base text-muted mt-2">拖放图片、选择参数，一站式上传、排队、处理与下载，实时状态可视化</p>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <button id="theme-toggle"
+            class="px-4 py-2 rounded-full border border-border/60 bg-card/70 hover:border-accent transition-all duration-300 text-sm font-medium flex items-center gap-2">
+            <i class="fa-solid fa-circle-half-stroke text-accent"></i>
+            <span>切换主题</span>
+          </button>
+          <a href="/log"
+            class="px-4 py-2 rounded-full border border-border/60 bg-card/70 hover:border-accent transition-all duration-300 text-sm font-medium flex items-center gap-2">
+            <i class="fa-solid fa-stream"></i>
+            <span>实时日志</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 pb-16 space-y-8">
+      <section class="grid gap-6 xl:grid-cols-[1.1fr_0.95fr]">
+        <div class="card h-full" id="drop-card">
+          <div class="flex items-center justify-between gap-4 mb-6">
+            <div>
+              <h2 class="text-xl font-semibold">图片上传</h2>
+              <p class="text-muted text-sm mt-1">拖入或选择一张图片，支持 PNG / JPG / WebP</p>
+            </div>
+            <span
+              class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-accent bg-accent/10 px-3 py-1 rounded-full">
+              <i class="fa-solid fa-bolt"></i>
+              实时处理
+            </span>
+          </div>
+          <input id="file-input" name="file" type="file" accept="image/png,image/jpeg,image/webp" class="sr-only">
+          <label for="file-input" id="drop-zone"
+            class="relative block border border-dashed border-border/80 rounded-2xl p-6 sm:p-8 text-center cursor-pointer transition-all duration-300 hover:border-accent focus-within:border-accent">
+            <div class="flex flex-col items-center gap-4">
+              <div class="w-20 h-20 rounded-2xl bg-muted/10 flex items-center justify-center text-accent text-3xl">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+              </div>
+              <div>
+                <p class="font-semibold">点击或拖入文件</p>
+                <p class="text-muted text-sm">单文件最大 100 MB</p>
+              </div>
+              <div class="flex flex-wrap items-center justify-center gap-3 text-xs text-muted">
+                <span class="badge">PNG</span>
+                <span class="badge">JPG</span>
+                <span class="badge">WEBP</span>
+                <span class="badge">≤100MB</span>
+              </div>
+            </div>
+            <div id="drop-overlay"
+              class="hidden flex absolute inset-0 rounded-2xl bg-accent/15 backdrop-blur-sm border-2 border-accent border-dashed items-center justify-center text-accent text-lg font-semibold">
+              松开以上传
+            </div>
+          </label>
+          <div id="preview-pane" class="preview hidden mt-6">
+            <div class="preview-media"></div>
+            <div class="preview-meta"></div>
+          </div>
+        </div>
+
+        <form id="upscale-form" class="card space-y-6">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <h2 class="text-xl font-semibold">放大参数</h2>
+            </div>
+            <button type="button" id="reset-btn"
+              class="text-sm text-muted hover:text-foreground transition-all duration-300">
+              <i class="fa-solid fa-rotate"></i>
+              <span>重置</span>
+            </button>
+          </div>
+          <div class="grid gap-4 md:grid-cols-2">
+            <div class="form-field">
+              <span>放大倍数</span>
+              <div class="segmented" id="scale-group">
+                <button type="button" data-scale="1">1x</button>
+                <button type="button" data-scale="2" class="active">2x</button>
+                <button type="button" data-scale="4">4x</button>
+                <button type="button" data-scale="8">8x</button>
+                <button type="button" data-scale="16">16x</button>
+                <button type="button" data-scale="32">32x</button>
+              </div>
+              <input type="hidden" id="scale" name="scale" value="2">
+            </div>
+            <div class="form-field">
+              <span>降噪等级</span>
+              <div class="segmented" id="noise-group">
+                <button type="button" data-noise="-1">关闭</button>
+                <button type="button" data-noise="0">0</button>
+                <button type="button" data-noise="1" class="active">1</button>
+                <button type="button" data-noise="2">2</button>
+                <button type="button" data-noise="3">3</button>
+              </div>
+              <input type="hidden" id="noise" name="noise" value="1">
+            </div>
+            <label class="form-field md:col-span-2">
+              <span>模型</span>
+              <div class="grid gap-3 sm:grid-cols-3">
+                <label class="model-card">
+                  <input type="radio" name="model" value="models-cunet" checked>
+                  <div>
+                    <p class="font-medium">CUnet</p>
+                    <p class="text-muted text-xs">动漫细节保留好，默认推荐</p>
+                  </div>
+                </label>
+                <label class="model-card">
+                  <input type="radio" name="model" value="models-upconv_7_anime_style_art_rgb">
+                  <div>
+                    <p class="font-medium">Anime RGB</p>
+                    <p class="text-muted text-xs">色彩柔和，适合插画</p>
+                  </div>
+                </label>
+                <label class="model-card">
+                  <input type="radio" name="model" value="models-upconv_7_photo">
+                  <div>
+                    <p class="font-medium">Photo</p>
+                    <p class="text-muted text-xs">照片和实景图</p>
+                  </div>
+                </label>
+              </div>
+            </label>
+            <div class="form-field">
+              <span>输出格式</span>
+              <div class="segmented" id="format-group">
+                <button type="button" data-format="png" class="active">PNG</button>
+                <button type="button" data-format="jpg">JPG</button>
+                <button type="button" data-format="webp">WebP</button>
+              </div>
+              <input type="hidden" id="format" name="format" value="png">
+            </div>
+            <label class="form-field">
+              <span>Tile / GPU / Threads</span>
+              <input type="text" id="tile" name="tile" placeholder="Tile Size">
+              <input type="text" id="gpu" name="gpu" placeholder="GPU ID" class="mt-2">
+              <input type="text" id="threads" name="threads" placeholder="Load:Proc:Save" class="mt-2">
+            </label>
+          </div>
+          <div class="flex flex-wrap items-center gap-4 justify-center">
+            <label class="toggle">
+              <input type="checkbox" id="tta" name="tta">
+              <span>启用 TTA (质量更优)</span>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" id="direct" name="direct" checked>
+              <span>允许直接返回二进制</span>
+            </label>
+          </div>
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p class="text-sm text-muted">提交后将缓存任务ID，可随时恢复</p>
+            <button type="submit" class="btn-primary">
+              <span class="flex items-center gap-2">
+                <i class="fa-solid fa-rocket"></i>
+                发起超分
+              </span>
+            </button>
+          </div>
+        </form>
+
+      </section>
+
+      <section>
+        <div class="card h-full">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="icon-ring text-accent"><i class="fa-solid fa-signal"></i></div>
+            <div>
+              <h2 class="text-xl font-semibold">运行状态</h2>
+              <p class="text-muted text-sm">实时展示各阶段耗时与提示</p>
+            </div>
+          </div>
+          <div class="space-y-6">
+            <div class="status-timeline" id="status-timeline">
+              <div class="status-step" data-step="upload">
+                <div class="status-dot"></div>
+                <div>
+                  <p class="font-medium">上传校验</p>
+                  <p class="text-muted text-sm">准备工作</p>
+                </div>
+              </div>
+              <div class="status-step" data-step="queue">
+                <div class="status-dot"></div>
+                <div>
+                  <p class="font-medium">排队调度</p>
+                  <p class="text-muted text-sm">队列等待</p>
+                </div>
+              </div>
+              <div class="status-step" data-step="process">
+                <div class="status-dot"></div>
+                <div>
+                  <p class="font-medium">算力处理</p>
+                  <p class="text-muted text-sm">超分降噪</p>
+                </div>
+              </div>
+              <div class="status-step" data-step="download">
+                <div class="status-dot"></div>
+                <div>
+                  <p class="font-medium">结果下发</p>
+                  <p class="text-muted text-sm">预览与下载</p>
+                </div>
+              </div>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="info-tile">
+                <p class="text-muted text-xs uppercase tracking-wide">最新任务</p>
+                <p id="task-id-current" class="text-lg font-semibold truncate">—</p>
+                <p id="task-status-hint" class="text-muted text-sm">等待开始</p>
+              </div>
+              <div class="info-tile">
+                <p class="text-muted text-xs uppercase tracking-wide">预计耗时</p>
+                <p id="eta-display" class="text-lg font-semibold">—</p>
+                <p class="text-muted text-sm">取决于图片大小、超分参数等</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="card space-y-6" id="result-panel">
+          <div class="flex items-center gap-3">
+            <div class="icon-ring text-accent"><i class="fa-solid fa-image"></i></div>
+            <div>
+              <h2 class="text-xl font-semibold">处理结果</h2>
+              <p class="text-muted text-sm">支持保存最近20条历史任务</p>
+            </div>
+          </div>
+          <div id="result-placeholder" class="result-placeholder">
+            <p class="font-medium">暂无结果</p>
+            <p class="text-muted text-sm">提交任务后会在此展示每个任务的缩略图与操作按钮</p>
+          </div>
+          <div id="result-list" class="result-list hidden"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="text-center text-sm text-muted py-8">
+      <p>© <span id="year"></span> Waifu2x STUDIO </p>
+    </footer>
+  </div>
+
+  <div id="toast-stack" class="toast-stack"></div>
+
+  <script src="./script.js" type="module"></script>
+</body>
+
+</html>
