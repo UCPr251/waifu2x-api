@@ -33,6 +33,9 @@ export function createUpscaleRouter(coordinator: TaskCoordinator, cacheService: 
       if (!sourceKey || !cid) {
         return res.status(400).send({ error: 'sourceKey and cid are required' })
       }
+      if (!/^[a-zA-Z0-9_\-]+$/.test(sourceKey) || !/^[a-zA-Z0-9_\-]+$/.test(cid)) {
+        return res.status(400).send({ error: 'sourceKey and cid can only contain letters, numbers, underscores, and hyphens' })
+      }
 
       const imageMeta = formatImageMeta({ sourceKey, cid, eid, page })
       logger.debug(`${logger.magenta('[接口]')} [接收] ${imageMeta} 原始大小${(imageBuffer.length / 1024 / 1024).toFixed(2)}MB${getTimeConsuming()}`)
