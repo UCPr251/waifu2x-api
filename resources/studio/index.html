@@ -52,7 +52,7 @@
             <p class="text-base text-muted mt-2">拖放图片、选择参数，一站式上传、排队、处理与下载，实时状态可视化</p>
           </div>
         </div>
-        <div class="flex flex-wrap items-center gap-3">
+        <div class="flex flex-wrap items-center gap-3 justify-end">
           <button id="theme-toggle"
             class="px-4 py-2 rounded-full border border-border/60 bg-card/70 hover:border-accent transition-all duration-300 text-sm font-medium flex items-center gap-2">
             <i class="fa-solid fa-circle-half-stroke text-accent"></i>
@@ -71,9 +71,9 @@
       <section class="grid gap-6 xl:grid-cols-[1.1fr_0.95fr]">
         <div class="card h-full" id="drop-card">
           <div class="flex items-center justify-between gap-4 mb-6">
-            <div>
+            <div class="max-w-[60%]">
               <h2 class="text-xl font-semibold">图片上传</h2>
-              <p class="text-muted text-sm mt-1">拖入或选择一张图片，支持 PNG / JPG / WebP</p>
+              <p class="text-muted text-sm mt-1">拖入或选择一张图片</p>
             </div>
             <span
               class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-accent bg-accent/10 px-3 py-1 rounded-full">
@@ -96,7 +96,6 @@
                 <span class="badge">PNG</span>
                 <span class="badge">JPG</span>
                 <span class="badge">WEBP</span>
-                <span class="badge">≤100MB</span>
               </div>
             </div>
             <div id="drop-overlay"
@@ -166,7 +165,7 @@
                   <input type="radio" name="model" value="models-upconv_7_photo">
                   <div>
                     <p class="font-medium">Photo</p>
-                    <p class="text-muted text-xs">照片和实景图</p>
+                    <p class="text-muted text-xs">适合照片和实景图</p>
                   </div>
                 </label>
               </div>
@@ -187,14 +186,14 @@
               <input type="text" id="threads" name="threads" placeholder="Load:Proc:Save" class="mt-2">
             </label>
           </div>
-          <div class="flex flex-wrap items-center gap-4 justify-center">
+          <div class="flex flex-wrap items-center gap-3 justify-center">
             <label class="toggle">
               <input type="checkbox" id="tta" name="tta">
-              <span>启用 TTA (质量更优)</span>
+              <span>启用TTA (质量更优)</span>
             </label>
             <label class="toggle">
               <input type="checkbox" id="direct" name="direct" checked>
-              <span>允许直接返回二进制</span>
+              <span>允许直接返回图片</span>
             </label>
           </div>
           <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

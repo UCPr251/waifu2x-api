@@ -197,10 +197,10 @@ function formatBytes(bytes) {
 function estimateEta() {
   if (!etaDisplay) return
   const scale = Number(scaleSelect?.value || 2)
-  const noise = Number(noiseHidden?.value || 1)
-  const base = scale >= 32 ? 60 : scale >= 16 ? 30 : scale >= 8 ? 15 : scale >= 4 ? 8 : scale >= 2 ? 4 : 2
-  const ttaPenalty = ttaInput?.checked ? 12 : 0
-  const etaBase = base + noise * 2 + ttaPenalty
+  const noise = Number(noiseHidden?.value ?? 1)
+  const base = scale >= 32 ? 40 : scale >= 16 ? 20 : scale >= 8 ? 10 : scale >= 4 ? 5 : scale >= 2 ? 3 : 1
+  const ttaPenalty = ttaInput?.checked ? 2 : 1
+  const etaBase = base * (1 + (noise + 1) * 0.3) * ttaPenalty
   let sizeFactor = 1
   if (state.file) {
     const sizeMB = state.file.size / (1024 * 1024)
@@ -517,7 +517,7 @@ function renderResultList() {
 
 function renderResultCard(task) {
   const card = document.createElement('article')
-  card.className = 'result-card'
+  card.className = 'result-card xl:max-w-md'
   card.dataset.taskId = task.taskId
 
   const summary = formatTaskSummary(task)

@@ -201,6 +201,7 @@
     border-radius: 1.5rem;
     padding: 1rem 1.2rem;
     background: color-mix(in srgb, var(--card) 80%, transparent);
+    overflow: hidden;
   }
 
   .form-field {
@@ -291,7 +292,7 @@
   .toggle {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.3rem;
     padding: 0.4rem 0.9rem;
     border-radius: 999px;
     border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
@@ -724,13 +725,6 @@
     padding: 1.5rem;
   }
 
-  .segmented {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .segmented button {
-    border-bottom: none;
-  }
 }
 
 @keyframes toast-in {
