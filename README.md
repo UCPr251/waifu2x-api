@@ -1,6 +1,6 @@
 # Waifu2x API Service
 
-A TypeScript/Node.js service that schedules and executes waifu2x image upscaling jobs with PostgreSQL-backed caching, filesystem storage, configurable concurrency via `p-queue`, and a simple test client.
+A TypeScript/Node.js service that schedules and executes [waifu2x-ncnn-vulkan](https://github.com/nihui/waifu2x-ncnn-vulkan) image upscaling jobs with PostgreSQL-backed caching, filesystem storage, configurable concurrency, web page window, and a simple test client.
 
 Mainly used for custom [processImage](./test/processImage.js) in [venera](https://github.com/venera-app/venera).
 
