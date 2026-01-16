@@ -10,6 +10,8 @@ Mainly used for custom [processImage](./test/processImage.js) in [venera](https:
 - **Task orchestration** powered by a PostgreSQL table (`waifu2x_tasks`), a file cache, and a dynamic `p-queue` scheduler honoring FIFO/LIFO strategies.
 - **Cache deduplication** that reuses completed results and in-flight jobs using deterministic cache keys.
 - **Runtime configuration** hot-reloaded from `config.json`, covering waifu2x parameters, scheduler tuning, logging, and filesystem paths.
+- [**Real-time log page**](#real-time-log-page) served at `/log`, including optional token auth, live streaming output, and client-side persistence for gated access.
+- [**Visual Upscaling Studio**](#visual-upscaling-studio) hosted at `/studio`, providing drag-and-drop uploads, parameter tuning (scale/noise/model/format/tile/gpu/threads, TTA), queue status, and auto-download flows.
 - **Test utilities** for exercising the API (`test/processImage.js`, `test/test_database.js`) and resetting the database (`test/reset_database.js`).
 
 ## Prerequisites
@@ -66,24 +68,18 @@ The custom logger (log4js + chalk) emits color-coded, bracketed tags to differen
 - Visit `http://<host>:<port>/log` to watch structured logs live; append `?token=<config.api.logToken>` (and set the token in `config.json`) to gate access. The page remembers your token in `localStorage` for future reloads.
 - Five consecutive invalid tokens from the same IP will push that IP into `config.api.blackIPs`, so share URLs carefully.
 
-<details>
-<summary>Real-Time Log Page</summary>
 <p align="center">
   <img width="800" src="https://s2.loli.net/2026/01/16/SThXGx3qRw7EtIc.png" title="Real-Time Log Page">
 </p>
-</details>
 
 ## Visual Upscaling Studio
 
 - Open `http://<host>:<port>/studio` to access the drag-and-drop interface. It supports file validation, parameter tweaking (scale/noise/model/format/tile/gpu/threads), TTA toggles, queue status visualization, and automatic polling with download + copy-link actions.
 - Just for fun. It is quite cool.
 
-<details>
-<summary>Visual Upscaling Studio</summary>
 <p align="center">
   <img width="800" src="https://s2.loli.net/2026/01/16/g2cUEQKxSkh8FNl.png" title="Visual Upscaling Studio">
 </p>
-</details>
 
 ## Scripts
 
