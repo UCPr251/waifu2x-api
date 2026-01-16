@@ -12,7 +12,7 @@ const pool = new Pool(pgConfig)
 
 async function testPool() {
   try {
-    const res = await pool.query('SELECT * FROM waifu2x_tasks')
+    const res = await pool.query('SELECT * FROM waifu2x_tasks ORDER BY updated_at DESC LIMIT 10')
 
     // const res = await pool.query(
     //   'SELECT task_id, file_uid, cache_key, source_key, cid, status, output_path, input_path, format, error, params::text, created_at, updated_at FROM waifu2x_tasks WHERE status = $1 ORDER BY updated_at DESC',
