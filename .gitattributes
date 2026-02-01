@@ -1,0 +1,5 @@
+resources/public/ linguist-generated
+resources/public/ -linguist-detectable
+
+resources/**/style.css linguist-generated
+resources/**/style.css -linguist-detectable
